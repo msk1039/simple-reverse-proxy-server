@@ -40,13 +40,14 @@ function createServer(config) {
                     }
                     return;
                 }
-                worker.send(JSON.stringify({
+                const workerMessage = {
                     requestType: 'HTTP',
-                    url: req.url,
-                    method: req.method,
+                    url: req.url || '/',
+                    // method: req.method,
                     headers: req.headers,
                     body: null
-                }));
+                };
+                worker.send(JSON.stringify(workerMessage));
                 worker.once('message', (message) => {
                     if (!workerState.hasResponded) {
                         try {

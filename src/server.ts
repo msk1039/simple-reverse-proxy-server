@@ -43,13 +43,15 @@ export async function createServer(config: CreateServerConfig) {
         return;
       }
 
-      worker.send(JSON.stringify({
+      const workerMessage: WorkerMessageType = {
         requestType: 'HTTP',
-        url: req.url,
-        method: req.method,
+        url: req.url || '/',
+        // method: req.method,
         headers: req.headers,
         body: null
-      }));
+      };
+      
+      worker.send(JSON.stringify(workerMessage));
 
       worker.once('message', (message: string) => {
         if (!workerState.hasResponded) {
