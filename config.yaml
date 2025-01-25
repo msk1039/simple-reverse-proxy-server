@@ -1,0 +1,29 @@
+server:
+  listen: 8000
+  workers: 4
+
+  upstreams:
+    - id: upstream1
+      url: jsonplaceholder.typicode.com
+
+    - id: dummy
+      url: dummyjson.com
+
+  headers:
+    - key: x-forward-for
+      value: '$ip'
+
+    - key: Authorization
+      value: 'Bearer xyz'
+
+  rules:
+    - path: /test
+      upstreams:
+        - dummy
+    - path: /**
+      upstreams:
+        - upstream1
+    - path: /
+      upstreams:
+        - upstream1
+    
